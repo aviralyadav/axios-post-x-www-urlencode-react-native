@@ -35,8 +35,24 @@ class ApiCall extends React.Component {
    axios.post(url, qs.stringify(body), requestOptions)
     .then(response => {
       const obj_ = qs.parse(qs.stringify(eval("("+response.data+")")));
-      const {udf1, office_type_new} = obj_.data[0];
-      console.log(udf1, office_type_new);
+      const {udf1, office_type_new, office_i_d} = obj_.data[0];
+      const {success} = obj_;
+      console.log(udf1, office_type_new, success);
+      const postBody = {
+        wing: udf1,
+        post_id: Number('0009'),
+        login_user: 'ee1qcd_nnded',
+        office_id: office_i_d
+      };
+      if(success){
+        console.log('post-', postBody);
+        axios.post('http://49.248.167.28:8080/QCSWebServices/SlipList.php ', qs.stringify(postBody), requestOptions)
+        .then(res => {
+          const postObj_ = qs.parse(qs.stringify(eval("("+res.data+")")));
+          const {data} = postObj_;
+          console.table(data);
+        }).catch(err => console.log('post-call-2', err))
+      }
     })
     .catch(err => {
       console.log('ax', err);
