@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Text, Button } from 'react-native';
 import qs from 'qs'
 import axios from 'axios';
-
+var obj = {};
 class ApiCall extends React.Component {
     componentDidMount() {
-        // this.getMoviesFromApi();
+        this.getMoviesFromApi();
     }
      status(response) {
         if (response.status >= 200 && response.status < 300) {
@@ -23,18 +23,20 @@ class ApiCall extends React.Component {
         const url = 'http://49.248.167.28:8080/QCSWebServices/UserOfficeType.php';
         let requestOptions = {
           headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
           }
       };
   
       let body = {
         office_id: '0000073',
-          format: 'json'
+          // format: 'json'
       };
+      
    axios.post(url, qs.stringify(body), requestOptions)
     .then(response => {
-      console.log(response.data);
-        // return response;
+      const obj_ = qs.parse(qs.stringify(eval("("+response.data+")")));
+      const {udf1, office_type_new} = obj_.data[0];
+      console.log(udf1, office_type_new);
     })
     .catch(err => {
       console.log('ax', err);
